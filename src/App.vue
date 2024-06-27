@@ -3,16 +3,24 @@ import { ref } from 'vue';
 
 let showModal = ref(false);
 const modelInput = ref('');
+let errorMessage = ref('');
 const notes = ref([]);
 
 const hideModal = e => {
     if (e.target.classList.contains('overlay')) {
         console.log(notes);
         showModal.value = false;
+        modelInput.value = '';
+        errorMessage.value = '';
     }
 };
 
 const createNote = () => {
+    if (modelInput.value.length < 10) {
+        errorMessage.value = 'minimum 10 characters required';
+        return;
+    }
+
     notes.value.push({
         id: Math.floor(Math.random() * 100000),
         text: modelInput.value,
@@ -21,6 +29,7 @@ const createNote = () => {
     });
     showModal.value = false;
     modelInput.value = '';
+    errorMessage.value = '';
 };
 </script>
 
@@ -28,7 +37,8 @@ const createNote = () => {
     <main>
         <div class="overlay" v-if="showModal" @click="hideModal">
             <div class="modal">
-                <textarea v-model="modelInput" name="note" id="note" cols="30" rows="10"></textarea>
+                <textarea v-model.trim="modelInput" name="note" id="note" cols="30" rows="10" placeholder="min 10 characters"></textarea>
+                <span v-if="errorMessage">{{ errorMessage }}</span>
                 <button @click="createNote">Add Note</button>
             </div>
         </div>
@@ -116,11 +126,15 @@ main {
             position: relative;
             display: flex;
             flex-direction: column;
-        }
 
-        button {
-            background-color: $newColor;
-            margin-top: 1rem;
+            button {
+                background-color: $newColor;
+                margin-top: 1rem;
+            }
+
+            span {
+                color: red;
+            }
         }
     }
 }
