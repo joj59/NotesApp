@@ -1,11 +1,11 @@
 <script setup></script>
 
 <template>
-    <h1>hello</h1>
+    <h1>Hello Vue</h1>
 </template>
 
 <style lang="scss">
 h1 {
-    color: $green;
+    color: $newColor;
 }
 </style>
